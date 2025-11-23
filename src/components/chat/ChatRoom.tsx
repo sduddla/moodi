@@ -1,42 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { Message } from '@/types/chat';
 import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
-import ChatList, { Message } from './ChatList';
-
-const exMessages: Message[] = [
-  {
-    id: '1',
-    role: 'assistant',
-    text: '안녕하세요! 오늘 기분이 어떠세요?',
-  },
-  {
-    id: '2',
-    role: 'user',
-    text: '안녕! 오늘 좀 피곤해',
-  },
-  {
-    id: '3',
-    role: 'assistant',
-    text: '피곤하시는군요. 무슨 일이 있었나요? 이야기해주시면 듣고 싶어요.',
-  },
-  {
-    id: '4',
-    role: 'user',
-    text: '일이 너무 많아서 스트레스 받아',
-  },
-  {
-    id: '5',
-    role: 'assistant',
-    text: '힘든 하루 보내셨군요. 충분히 쉬시고, 내일은 더 나은 하루가 될 거예요. 제가 옆에서 응원할게요!',
-  },
-];
+import ChatList from './ChatList';
+import { useState } from 'react';
+import sendChatMessage from '@/hooks/sendChatMessage';
 
 export default function ChatRoom() {
-  // TODO: 메시지 추가 기능 구현 시 사용 예정
-  const [messages] = useState<Message[]>(exMessages);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: crypto.randomUUID(),
+      role: 'moodi',
+      text: '안녕?',
+    },
+  ]);
+
+  const handleSend = async (message: string) => {
+    // 사용자 메시지 추가
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      text: message,
+    };
+    setMessages((prev) => [...prev, userMessage]);
+
+    try {
+      const response = await sendChatMessage(message);
+
+      // 무디 응답 추가
+      const moodiMessage: Message = {
+        id: crypto.randomUUID(),
+        role: 'moodi',
+        text: response,
+      };
+      setMessages((prev) => [...prev, moodiMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+
+      const errorMessage: Message = {
+        id: crypto.randomUUID(),
+        role: 'moodi',
+        text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
+  };
 
   return (
     <div className='flex h-screen bg-white'>
@@ -54,7 +64,7 @@ export default function ChatRoom() {
           <div className='px-6 pb-6 pt-2'>
             <div className='max-w-3xl mx-auto'>
               <div className='bg-white rounded-lg shadow-[0_-4px_12px_rgba(0,0,0,0.06)] border border-gray-100 px-4'>
-                <ChatInput />
+                <ChatInput onSend={handleSend} />
               </div>
             </div>
           </div>

@@ -1,8 +1,4 @@
-export interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-}
+import { Message } from '@/types/chat';
 
 interface ChatListProps {
   messages: Message[];
