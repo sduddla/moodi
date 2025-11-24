@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import SidebarChatList from './SidebarChatList';
 import SidebarHeader from './SidebarHeader';
 import { useSidebarStore } from '@/stores/useSidebarStore';
 
 export default function Sidebar() {
   const { isCollapsed, toggle } = useSidebarStore();
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <>
@@ -16,14 +18,19 @@ export default function Sidebar() {
       >
         <div>
           {/* 사이드바 헤더 */}
-          <SidebarHeader isCollapsed={isCollapsed} onToggle={toggle} />
+          <SidebarHeader
+            isCollapsed={isCollapsed}
+            onToggle={toggle}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
         </div>
 
         {/* 최근 메시지 리스트 */}
         {!isCollapsed && (
           <div className='flex-1 overflow-y-auto p-4 mt-6'>
             <p className='text-sm text-[#6D717C] mb-2'>최근 채팅</p>
-            <SidebarChatList />
+            <SidebarChatList searchQuery={searchQuery} />
           </div>
         )}
       </aside>

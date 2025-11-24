@@ -5,15 +5,18 @@ import mBlack from '@/assets/icons/m-black.png';
 import Image from 'next/image';
 import { PanelLeft, Plus, Search } from 'lucide-react';
 import { useChatStore } from '@/stores/useChatStore';
-
 interface SidebarHeaderProps {
   isCollapsed: boolean;
   onToggle: () => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
 export default function SidebarHeader({
   isCollapsed,
   onToggle,
+  searchQuery,
+  onSearchChange,
 }: SidebarHeaderProps) {
   const router = useRouter();
   const { createChatRoom } = useChatStore();
@@ -83,6 +86,8 @@ export default function SidebarHeader({
               type='text'
               placeholder='검색하기...'
               className='w-full bg-transparent text-xs text-gray-800 placeholder:text-[#575B65] focus:outline-none'
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
 
