@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import mBlack from '@/assets/icons/m-black.png';
 import Image from 'next/image';
 import { PanelLeft, Plus, Search } from 'lucide-react';
+import { useChatStore } from '@/stores/useChatStore';
 
 interface SidebarHeaderProps {
   isCollapsed: boolean;
@@ -15,9 +16,16 @@ export default function SidebarHeader({
   onToggle,
 }: SidebarHeaderProps) {
   const router = useRouter();
+  const { createChatRoom } = useChatStore();
 
   const goIntroPage = () => {
     router.push('/');
+  };
+
+  const handleCreateChatRoom = () => {
+    const chatId = crypto.randomUUID();
+    createChatRoom(chatId);
+    router.push(`/chat/${chatId}`);
   };
 
   return (
@@ -59,6 +67,7 @@ export default function SidebarHeader({
         {isCollapsed && (
           <button
             type='button'
+            onClick={handleCreateChatRoom}
             className='w-8 h-8 bg-[#23C69E] text-white rounded-lg flex items-center justify-center transition-colors hover:bg-[#1ea886] cursor-pointer'
           >
             <Plus size={16} />
@@ -79,6 +88,7 @@ export default function SidebarHeader({
 
           <button
             type='button'
+            onClick={handleCreateChatRoom}
             className='w-8 h-8 bg-[#23C69E] text-white rounded-lg flex items-center justify-center hover:bg-[#1ea886] transition-colors cursor-pointer'
           >
             <Plus size={16} />
