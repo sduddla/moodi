@@ -1,14 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import SidebarChatList from './SidebarChatList';
 import SidebarHeader from './SidebarHeader';
+import { useSidebarStore } from '@/stores/useSidebarStore';
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleSidebar = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  const { isCollapsed, toggle } = useSidebarStore();
+
   return (
     <>
       <aside
@@ -18,7 +16,7 @@ export default function Sidebar() {
       >
         <div>
           {/* 사이드바 헤더 */}
-          <SidebarHeader isCollapsed={isCollapsed} onToggle={toggleSidebar} />
+          <SidebarHeader isCollapsed={isCollapsed} onToggle={toggle} />
         </div>
 
         {/* 최근 메시지 리스트 */}
