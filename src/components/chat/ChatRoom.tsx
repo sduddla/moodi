@@ -1,21 +1,27 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Message } from '@/types/chat';
 import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
 import ChatList from './ChatList';
-import { useState } from 'react';
 import sendChatMessage from '@/hooks/sendChatMessage';
+import { useParams } from 'next/navigation';
+import { useChatStore } from '@/stores/useChatStore';
 
 export default function ChatRoom() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: crypto.randomUUID(),
-      role: 'moodi',
-      text: '안녕?',
-    },
-  ]);
+  const params = useParams();
+  const roomId = params.id as string;
+
+  const { addMessage, createChatRoom, chats } = useChatStore();
+  const messages = chats[roomId] || [];
+
+  useEffect(() => {
+    if (roomId && !chats[roomId]) {
+      createChatRoom(roomId);
+    }
+  }, [roomId, chats, createChatRoom]);
 
   const handleSend = async (message: string) => {
     // 사용자 메시지 추가
@@ -24,7 +30,7 @@ export default function ChatRoom() {
       role: 'user',
       text: message,
     };
-    setMessages((prev) => [...prev, userMessage]);
+    addMessage(roomId, userMessage);
 
     try {
       const response = await sendChatMessage(message);
@@ -35,7 +41,7 @@ export default function ChatRoom() {
         role: 'moodi',
         text: response,
       };
-      setMessages((prev) => [...prev, moodiMessage]);
+      addMessage(roomId, moodiMessage);
     } catch (error) {
       console.error('Error sending message:', error);
 
@@ -44,7 +50,7 @@ export default function ChatRoom() {
         role: 'moodi',
         text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      addMessage(roomId, errorMessage);
     }
   };
 
