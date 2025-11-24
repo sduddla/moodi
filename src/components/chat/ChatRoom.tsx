@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Message } from '@/types/chat';
 import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
@@ -9,13 +9,15 @@ import ChatList from './ChatList';
 import sendChatMessage from '@/hooks/sendChatMessage';
 import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
+import useDebounce from '@/hooks/useDebounce';
 
 export default function ChatRoom() {
   const params = useParams();
   const roomId = params.id as string;
-
   const { addMessage, createChatRoom, chats } = useChatStore();
   const messages = chats[roomId] || [];
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce({ value: searchQuery, delay: 300 });
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -58,12 +60,15 @@ export default function ChatRoom() {
     <div className='flex h-screen bg-white'>
       <Sidebar />
       <div className='flex flex-1 flex-col'>
-        <ChatHeader />
+        <ChatHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
         <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg'>
           <div className='flex-1 overflow-y-auto px-6 py-4'>
             <div className='max-w-3xl mx-auto mt-6'>
-              <ChatList messages={messages} />
+              <ChatList
+                messages={messages}
+                searchQuery={debouncedSearchQuery}
+              />
             </div>
           </div>
 
