@@ -4,17 +4,17 @@ import { useEffect, useRef } from 'react';
 import { useChatStore } from '@/stores/useChatStore';
 import { Pencil, Trash } from 'lucide-react';
 
-interface ChatMenuModalProps {
+interface SidebarChatModalProps {
   chatId: string;
   onClose: () => void;
   onTitleRename: () => void;
 }
 
-export default function ChatMenuModal({
+export default function SidebarChatModal({
   chatId,
   onClose,
   onTitleRename,
-}: ChatMenuModalProps) {
+}: SidebarChatModalProps) {
   const { deleteChatRoom } = useChatStore();
   const modalRef = useRef<HTMLDivElement>(null);
 

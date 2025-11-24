@@ -3,9 +3,9 @@
 import { useChatStore } from '@/stores/useChatStore';
 import { Ellipsis } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import ChatMenuModal from './ChatMenuModal';
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
+import SidebarChatModal from './SidebarChatModal';
 
 export default function SidebarChatList({
   searchQuery,
@@ -118,7 +118,7 @@ export default function SidebarChatList({
                 </div>
 
                 {openModalId === chat.id && (
-                  <ChatMenuModal
+                  <SidebarChatModal
                     chatId={chat.id}
                     onClose={() => setOpenModalId(null)}
                     onTitleRename={() => handleEditTitle(chat.id, chat.title)}
