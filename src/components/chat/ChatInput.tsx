@@ -3,24 +3,28 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 
+interface ChatInputProps {
+  onSend: (message: string) => void;
+  disabled?: boolean;
+}
+
 export default function ChatInput({
   onSend,
-}: {
-  onSend: (message: string) => void;
-}) {
+  disabled = false,
+}: ChatInputProps) {
   const [input, setInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
-  const canSend = input.trim().length > 0;
+  const isDisabled = disabled || !input.trim();
 
   const handleSend = () => {
-    if (canSend && !isComposing) {
+    if (!isDisabled && !isComposing) {
       onSend(input);
       setInput('');
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && canSend && !isComposing) {
+    if (e.key === 'Enter' && !isDisabled && !isComposing) {
       e.preventDefault();
       handleSend();
     }
@@ -41,10 +45,11 @@ export default function ChatInput({
       <button
         type='button'
         onClick={handleSend}
-        className={`absolute right-0 top-1/2 -translate-y-1/2 transition-colors cursor-pointer ${
-          canSend
-            ? 'text-[#10A37F]'
-            : 'text-gray-200 cursor-not-allowed opacity-50'
+        disabled={isDisabled}
+        className={`absolute right-0 top-1/2 -translate-y-1/2 transition-colors ${
+          isDisabled
+            ? 'text-gray-200 cursor-not-allowed'
+            : 'text-[#10A37F] cursor-pointer'
         }`}
       >
         <Send size={18} />
