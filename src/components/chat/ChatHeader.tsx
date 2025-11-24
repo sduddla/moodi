@@ -1,7 +1,8 @@
-import { Ellipsis, Search } from 'lucide-react';
+import { Bookmark, Search, Trash } from 'lucide-react';
 import { Rock_Salt } from 'next/font/google';
 import { useState } from 'react';
 import ChatSearchModal from './ChatSearchModal';
+import { useChatStore } from '@/stores/useChatStore';
 
 const rockSalt = Rock_Salt({
   weight: '400',
@@ -11,13 +12,20 @@ const rockSalt = Rock_Salt({
 interface ChatHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  chatId: string;
 }
 
 export default function ChatHeader({
   searchQuery,
   onSearchChange,
+  chatId,
 }: ChatHeaderProps) {
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const { deleteChatRoom } = useChatStore();
+
+  const handleDeleteClick = () => {
+    deleteChatRoom(chatId);
+  };
 
   const handleSearchClick = () => {
     setIsInputOpen(true);
@@ -46,16 +54,19 @@ export default function ChatHeader({
             type='button'
             className='flex items-center justify-center w-9 h-9 rounded-lg bg-[#EFEFEF] hover:bg-[#E8E8E8] cursor-pointer transition-colors'
           >
-            <Ellipsis size={16} className='text-[#1E1F22]' />
+            <Bookmark size={16} className='text-[#1E1F22]' />
+          </button>
+          <button
+            type='button'
+            onClick={handleDeleteClick}
+            className='flex items-center justify-center w-9 h-9 rounded-lg bg-red-100 hover:bg-[#FED7D7] cursor-pointer transition-colors'
+          >
+            <Trash size={16} className='text-red-600' />
           </button>
         </div>
       </div>
       {isInputOpen && (
         <>
-          <div
-            className='fixed inset-0 bg-black/10 z-40'
-            onClick={handleSearchClose}
-          />
           <ChatSearchModal
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}

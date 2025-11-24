@@ -81,7 +81,11 @@ export default function ChatRoom() {
         />
       )}
       <div className='flex flex-1 flex-col relative z-0'>
-        <ChatHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <ChatHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          chatId={roomId}
+        />
 
         <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg'>
           <div className='flex-1 overflow-y-auto px-6 py-4'>
