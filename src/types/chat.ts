@@ -7,7 +7,6 @@ export interface Message {
 export interface ChatSummary {
   id: string;
   title: string;
-  // preview?: string;
 }
 
 export interface ChatStore {
