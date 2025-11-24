@@ -77,6 +77,7 @@ export default function ChatRoom() {
           onClose={() => setModalState(null)}
           onTitleRename={modalState.onTitleRename}
           buttonElement={modalState.buttonElement}
+          currentRoomId={roomId}
         />
       )}
       <div className='flex flex-1 flex-col relative z-0'>

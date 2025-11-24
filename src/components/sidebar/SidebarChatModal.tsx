@@ -9,6 +9,7 @@ interface SidebarChatModalProps {
   onClose: () => void;
   onTitleRename: () => void;
   buttonElement: HTMLButtonElement;
+  currentRoomId: string;
 }
 
 export default function SidebarChatModal({
@@ -16,6 +17,7 @@ export default function SidebarChatModal({
   onClose,
   onTitleRename,
   buttonElement,
+  currentRoomId,
 }: SidebarChatModalProps) {
   const { deleteChatRoom } = useChatStore();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -64,7 +66,11 @@ export default function SidebarChatModal({
     if (buttonElement) {
       const parent = buttonElement.closest('.group');
       if (parent) {
-        parent.classList.add('bg-[#D8EFE9]');
+        if (currentRoomId === chatId) {
+          parent.classList.add('bg-[#D8EFE9]');
+        } else {
+          parent.classList.add('bg-[#E8F5F1]');
+        }
       }
     }
   };
@@ -73,7 +79,11 @@ export default function SidebarChatModal({
     if (buttonElement) {
       const parent = buttonElement.closest('.group');
       if (parent) {
-        parent.classList.remove('bg-[#D8EFE9]');
+        if (currentRoomId === chatId) {
+          parent.classList.remove('bg-[#D8EFE9]');
+        } else {
+          parent.classList.remove('bg-[#E8F5F1]');
+        }
       }
     }
   };

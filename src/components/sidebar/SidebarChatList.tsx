@@ -87,8 +87,24 @@ export default function SidebarChatList({
               className={`group flex items-center justify-between p-2 pl-0 rounded-lg cursor-pointer transition-colors ${
                 editingId === chat.id || currentRoomId === chat.id
                   ? 'bg-[#D8EFE9]'
-                  : 'hover:bg-[#D8EFE9]'
+                  : ''
               }`}
+              onMouseEnter={(e) => {
+                if (editingId !== chat.id && currentRoomId !== chat.id) {
+                  const parent = e.currentTarget.closest('.group');
+                  if (parent) {
+                    parent.classList.add('hover:bg-[#E8F5F1]');
+                  }
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (editingId !== chat.id && currentRoomId !== chat.id) {
+                  const parent = e.currentTarget.closest('.group');
+                  if (parent) {
+                    parent.classList.remove('hover:bg-[#E8F5F1]');
+                  }
+                }
+              }}
               onClick={() => {
                 if (editingId !== chat.id) {
                   handleChatClick(chat.id);
