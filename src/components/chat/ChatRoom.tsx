@@ -10,6 +10,13 @@ import sendChatMessage from '@/hooks/sendChatMessage';
 import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
 import useDebounce from '@/hooks/useDebounce';
+import SidebarChatModal from '../sidebar/SidebarChatModal';
+
+interface ModalState {
+  chatId: string;
+  onTitleRename: () => void;
+  buttonElement: HTMLButtonElement;
+}
 
 export default function ChatRoom() {
   const params = useParams();
@@ -18,6 +25,7 @@ export default function ChatRoom() {
   const messages = chats[roomId] || [];
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce({ value: searchQuery, delay: 300 });
+  const [modalState, setModalState] = useState<ModalState | null>(null);
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -57,9 +65,20 @@ export default function ChatRoom() {
   };
 
   return (
-    <div className='flex h-screen bg-white'>
-      <Sidebar />
-      <div className='flex flex-1 flex-col'>
+    <div className='flex h-screen bg-white relative'>
+      <Sidebar
+        openModalId={modalState?.chatId || null}
+        onOpenModal={setModalState}
+      />
+      {modalState && (
+        <SidebarChatModal
+          chatId={modalState.chatId}
+          onClose={() => setModalState(null)}
+          onTitleRename={modalState.onTitleRename}
+          buttonElement={modalState.buttonElement}
+        />
+      )}
+      <div className='flex flex-1 flex-col relative z-0'>
         <ChatHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
         <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg'>

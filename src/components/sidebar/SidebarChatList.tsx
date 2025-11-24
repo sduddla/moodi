@@ -5,15 +5,23 @@ import { Ellipsis } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
-import SidebarChatModal from './SidebarChatModal';
+
+interface SidebarChatListProps {
+  searchQuery: string;
+  onOpenModal?: (state: {
+    chatId: string;
+    onTitleRename: () => void;
+    buttonElement: HTMLButtonElement;
+  }) => void;
+  openModalId?: string | null;
+}
 
 export default function SidebarChatList({
   searchQuery,
-}: {
-  searchQuery: string;
-}) {
+  onOpenModal,
+  openModalId,
+}: SidebarChatListProps) {
   const { chatList, updateRoomTitle } = useChatStore();
-  const [openModalId, setOpenModalId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +51,20 @@ export default function SidebarChatList({
     }
     setEditingId(null);
     setEditTitle('');
+  };
+
+  const handleOpenModal = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    chatId: string,
+    chatTitle: string
+  ) => {
+    if (onOpenModal) {
+      onOpenModal({
+        chatId,
+        onTitleRename: () => handleEditTitle(chatId, chatTitle),
+        buttonElement: e.currentTarget,
+      });
+    }
   };
 
   useEffect(() => {
@@ -98,8 +120,12 @@ export default function SidebarChatList({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    className='opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded cursor-pointer'
-                    onClick={() => setOpenModalId(chat.id)}
+                    className={`transition-opacity p-1 rounded cursor-pointer ${
+                      openModalId === chat.id
+                        ? 'opacity-100'
+                        : 'opacity-0 group-hover:opacity-100'
+                    }`}
+                    onClick={(e) => handleOpenModal(e, chat.id, chat.title)}
                     onMouseEnter={(e) => {
                       const parent = e.currentTarget.closest('.group');
                       if (parent) {
@@ -116,14 +142,6 @@ export default function SidebarChatList({
                     <Ellipsis size={16} />
                   </button>
                 </div>
-
-                {openModalId === chat.id && (
-                  <SidebarChatModal
-                    chatId={chat.id}
-                    onClose={() => setOpenModalId(null)}
-                    onTitleRename={() => handleEditTitle(chat.id, chat.title)}
-                  />
-                )}
               </div>
             </div>
           ))}
