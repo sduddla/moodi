@@ -12,9 +12,14 @@ interface SidebarProps {
     onTitleRename: () => void;
     buttonElement: HTMLButtonElement;
   }) => void;
+  currentRoomId: string;
 }
 
-export default function Sidebar({ onOpenModal, openModalId }: SidebarProps) {
+export default function Sidebar({
+  onOpenModal,
+  openModalId,
+  currentRoomId,
+}: SidebarProps) {
   const { isCollapsed, toggle } = useSidebarStore();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -43,6 +48,7 @@ export default function Sidebar({ onOpenModal, openModalId }: SidebarProps) {
               searchQuery={searchQuery}
               onOpenModal={onOpenModal}
               openModalId={openModalId}
+              currentRoomId={currentRoomId}
             />
           </div>
         )}

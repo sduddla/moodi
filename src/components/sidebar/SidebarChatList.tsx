@@ -14,12 +14,14 @@ interface SidebarChatListProps {
     buttonElement: HTMLButtonElement;
   }) => void;
   openModalId?: string | null;
+  currentRoomId: string;
 }
 
 export default function SidebarChatList({
   searchQuery,
   onOpenModal,
   openModalId,
+  currentRoomId,
 }: SidebarChatListProps) {
   const { chatList, updateRoomTitle } = useChatStore();
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -83,7 +85,9 @@ export default function SidebarChatList({
             <div
               key={chat.id}
               className={`group flex items-center justify-between p-2 pl-0 rounded-lg cursor-pointer transition-colors ${
-                editingId === chat.id ? 'bg-[#D8EFE9]' : 'hover:bg-[#D8EFE9]'
+                editingId === chat.id || currentRoomId === chat.id
+                  ? 'bg-[#D8EFE9]'
+                  : 'hover:bg-[#D8EFE9]'
               }`}
               onClick={() => {
                 if (editingId !== chat.id) {

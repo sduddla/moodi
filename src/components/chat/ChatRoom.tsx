@@ -69,6 +69,7 @@ export default function ChatRoom() {
       <Sidebar
         openModalId={modalState?.chatId || null}
         onOpenModal={setModalState}
+        currentRoomId={roomId}
       />
       {modalState && (
         <SidebarChatModal
