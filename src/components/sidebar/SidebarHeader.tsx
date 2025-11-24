@@ -49,10 +49,26 @@ export default function SidebarHeader({
           type='button'
           onClick={isCollapsed ? onToggle : goIntroPage}
           title={isCollapsed ? '사이드바 열기' : ''}
-          className={`flex items-center justify-center rounded-lg w-9 h-9 hover:bg-[#F9F9F9] transition-colors 
+          className={`group flex items-center justify-center rounded-lg w-9 h-9 hover:bg-[#F9F9F9] transition-colors 
           ${isCollapsed ? 'cursor-e-resize' : 'cursor-pointer'}`}
         >
-          <Image src={mBlack} alt='로고 이미지' width={16} height={16} />
+          {isCollapsed ? (
+            <>
+              <Image
+                src={mBlack}
+                alt='로고 이미지'
+                width={16}
+                height={16}
+                className='group-hover:hidden'
+              />
+              <PanelLeft
+                size={18}
+                className='text-[#ABABAB] hidden group-hover:block'
+              />
+            </>
+          ) : (
+            <Image src={mBlack} alt='로고 이미지' width={16} height={16} />
+          )}
         </button>
 
         {/* 사이드바 접기 메뉴 */}
