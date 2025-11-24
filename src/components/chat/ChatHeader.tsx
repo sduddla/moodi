@@ -39,14 +39,14 @@ export default function ChatHeader({
             onClick={handleSearchClick}
             className='flex items-center justify-center w-9 h-9 rounded-lg bg-[#EFEFEF] hover:bg-[#E8E8E8] cursor-pointer transition-colors'
           >
-            <Search size={16} />
+            <Search size={16} className='text-[#1E1F22]' />
           </button>
 
           <button
             type='button'
             className='flex items-center justify-center w-9 h-9 rounded-lg bg-[#EFEFEF] hover:bg-[#E8E8E8] cursor-pointer transition-colors'
           >
-            <Ellipsis size={16} />
+            <Ellipsis size={16} className='text-[#1E1F22]' />
           </button>
         </div>
       </div>
