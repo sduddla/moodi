@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Message } from '@/types/chat';
 import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
@@ -26,12 +26,20 @@ export default function ChatRoom() {
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce({ value: searchQuery, delay: 300 });
   const [modalState, setModalState] = useState<ModalState | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
       createChatRoom(roomId);
     }
   }, [roomId, chats, createChatRoom]);
+
+  // 새로운 메시지 있을 경우 자동으로 맨 아래로 스크롤
+  useEffect(() => {
+    if (scrollRef.current && messages.length > 0) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages.length]);
 
   const handleSend = async (message: string) => {
     // 사용자 메시지 추가
@@ -87,8 +95,11 @@ export default function ChatRoom() {
           chatId={roomId}
         />
 
-        <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg'>
-          <div className='flex-1 overflow-y-auto px-6 py-4'>
+        <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg min-h-0'>
+          <div
+            ref={scrollRef}
+            className='flex-1 overflow-y-auto px-6 py-4 min-h-0'
+          >
             <div className='max-w-3xl mx-auto mt-6'>
               <ChatList
                 messages={messages}
@@ -97,7 +108,7 @@ export default function ChatRoom() {
             </div>
           </div>
 
-          <div className='px-6 pb-6 pt-2'>
+          <div className='shrink-0 px-6 pb-6 pt-2'>
             <div className='max-w-3xl mx-auto'>
               <div className='bg-white rounded-lg shadow-[0_-4px_12px_rgba(0,0,0,0.06)] border border-gray-100 px-4'>
                 <ChatInput onSend={handleSend} />
