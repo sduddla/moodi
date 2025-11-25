@@ -1,8 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import mBlack from '@/assets/icons/m-black.png';
-import mWhite from '@/assets/icons/m-white.png';
 import Image from 'next/image';
 import { PanelLeft, Plus, Search } from 'lucide-react';
 import { useChatStore } from '@/stores/useChatStore';
@@ -56,14 +54,14 @@ export default function SidebarHeader({
           {isCollapsed ? (
             <div className='relative flex items-center justify-center w-full h-full'>
               <Image
-                src={mBlack}
+                src='/logo.svg'
                 alt='로고 이미지'
                 width={16}
                 height={16}
                 className='absolute group-hover:hidden dark:hidden'
               />
               <Image
-                src={mWhite}
+                src='/logo-white.svg'
                 alt='로고 이미지'
                 width={16}
                 height={16}
@@ -77,14 +75,14 @@ export default function SidebarHeader({
           ) : (
             <>
               <Image
-                src={mBlack}
+                src='/logo.svg'
                 alt='로고 이미지'
                 width={16}
                 height={16}
                 className='dark:hidden'
               />
               <Image
-                src={mWhite}
+                src='/logo-white.svg'
                 alt='로고 이미지'
                 width={16}
                 height={16}
