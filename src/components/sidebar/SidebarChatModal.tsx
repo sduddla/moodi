@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useChatStore } from '@/stores/useChatStore';
 import { Pencil, Trash } from 'lucide-react';
 
@@ -36,6 +36,20 @@ export default function SidebarChatModal({
     updatePosition();
   }, [buttonElement]);
 
+  const getParentElement = useCallback(() => {
+    return buttonElement.closest('.group') as HTMLElement | null;
+  }, [buttonElement]);
+
+  const resetParentBackground = useCallback(() => {
+    const parent = getParentElement();
+    if (parent) {
+      parent.classList.remove('bg-chat-hover', 'dark:bg-dark-hover');
+      if (currentRoomId !== chatId) {
+        parent.classList.remove('bg-chat-active', 'dark:bg-dark-active');
+      }
+    }
+  }, [getParentElement, currentRoomId, chatId]);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -44,46 +58,34 @@ export default function SidebarChatModal({
         buttonElement &&
         !buttonElement.contains(e.target as Node)
       ) {
+        resetParentBackground();
         onClose();
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose, buttonElement]);
+  }, [onClose, buttonElement, resetParentBackground]);
 
   const handleTitleRename = () => {
     onTitleRename();
+    resetParentBackground();
     onClose();
   };
 
   const handleDelete = () => {
     deleteChatRoom(chatId);
+    resetParentBackground();
     onClose();
   };
 
   const handleMouseEnter = () => {
-    if (buttonElement) {
-      const parent = buttonElement.closest('.group');
-      if (parent) {
-        if (currentRoomId === chatId) {
-          parent.classList.add('bg-[#D8EFE9]');
-        } else {
-          parent.classList.add('bg-[#E8F5F1]');
-        }
-      }
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (buttonElement) {
-      const parent = buttonElement.closest('.group');
-      if (parent) {
-        if (currentRoomId === chatId) {
-          parent.classList.remove('bg-[#D8EFE9]');
-        } else {
-          parent.classList.remove('bg-[#E8F5F1]');
-        }
+    const parent = getParentElement();
+    if (parent) {
+      if (currentRoomId === chatId) {
+        parent.classList.add('bg-chat-active', 'dark:bg-dark-active');
+      } else {
+        parent.classList.add('bg-chat-hover', 'dark:bg-dark-hover');
       }
     }
   };
@@ -91,25 +93,24 @@ export default function SidebarChatModal({
   return (
     <div
       ref={modalRef}
-      className='fixed bg-white rounded-lg shadow-lg border border-gray-200 z-60 py-1 min-w-[140px]'
+      className='fixed bg-white dark:bg-dark rounded-lg border border-gray-200 dark:border-black/10 shadow-xl z-60 py-2 px-2 min-w-[140px]'
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <button
         onClick={handleTitleRename}
-        className='w-full px-4 py-2 text-sm text-left hover:bg-gray-100 transition-colors flex items-center gap-2 cursor-pointer'
+        className='w-full px-2 py-2 text-sm text-left text-black dark:text-white transition-colors flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-modal-hover rounded-md'
       >
-        <Pencil size={16} />
+        <Pencil size={16} className='dark:text-gray-300' />
         <span>이름 바꾸기</span>
       </button>
 
       <button
         onClick={handleDelete}
-        className='w-full px-4 py-2 text-sm text-left hover:bg-red-50 transition-colors flex items-center gap-2 cursor-pointer'
+        className='w-full px-2 py-2 text-sm text-left text-black dark:text-white hover:bg-red-50 dark:hover:bg-dark-red transition-colors flex items-center gap-2 cursor-pointer rounded-md'
       >
-        <Trash size={16} className='text-red-600' />
-        <span className='text-red-600'>삭제</span>
+        <Trash size={16} className='text-red-600 dark:text-red-400' />
+        <span className='text-red-600 dark:text-red-400'>삭제</span>
       </button>
     </div>
   );
