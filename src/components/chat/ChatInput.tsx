@@ -31,7 +31,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className='relative flex items-center w-full'>
+    <div className='relative flex items-center w-full '>
       <input
         type='text'
         placeholder='무엇이든 말해주세요.'
@@ -40,7 +40,7 @@ export default function ChatInput({
         onKeyDown={handleKeyDown}
         onCompositionStart={() => setIsComposing(true)}
         onCompositionEnd={() => setIsComposing(false)}
-        className='w-full bg-transparent text-sm px-0 py-4 pr-10 focus:outline-none placeholder:text-[#A0A7BB]'
+        className='w-full text-sm px-0 py-4 pr-10 focus:outline-none placeholder:text-placeholder'
       />
       <button
         type='button'
@@ -48,8 +48,8 @@ export default function ChatInput({
         disabled={isDisabled}
         className={`absolute right-0 top-1/2 -translate-y-1/2 transition-colors ${
           isDisabled
-            ? 'text-gray-200 cursor-not-allowed'
-            : 'text-[#10A37F] cursor-pointer'
+            ? 'text-gray-500 opacity-40 cursor-not-allowed'
+            : 'text-primary-accent cursor-pointer'
         }`}
       >
         <Send size={18} />

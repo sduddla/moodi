@@ -84,25 +84,25 @@ export default function SidebarChatList({
           {filteredChatList.map((chat) => (
             <div
               key={chat.id}
-              className={`group flex items-center justify-between p-2 pl-0 rounded-lg cursor-pointer transition-colors ${
+              className={`group flex items-center text-black dark:text-white justify-between p-2 pl-0 rounded-lg cursor-pointer transition-colors ${
                 editingId === chat.id || currentRoomId === chat.id
-                  ? 'bg-[#D8EFE9]'
+                  ? 'bg-chat-active dark:bg-dark-active'
                   : ''
               }`}
               onMouseEnter={(e) => {
                 if (editingId !== chat.id && currentRoomId !== chat.id) {
-                  const parent = e.currentTarget.closest('.group');
-                  if (parent) {
-                    parent.classList.add('hover:bg-[#E8F5F1]');
-                  }
+                  e.currentTarget.classList.add(
+                    'bg-chat-hover',
+                    'dark:bg-dark-hover'
+                  );
                 }
               }}
               onMouseLeave={(e) => {
                 if (editingId !== chat.id && currentRoomId !== chat.id) {
-                  const parent = e.currentTarget.closest('.group');
-                  if (parent) {
-                    parent.classList.remove('hover:bg-[#E8F5F1]');
-                  }
+                  e.currentTarget.classList.remove(
+                    'bg-chat-hover',
+                    'dark:bg-dark-hover'
+                  );
                 }
               }}
               onClick={() => {
@@ -147,15 +147,25 @@ export default function SidebarChatList({
                     }`}
                     onClick={(e) => handleOpenModal(e, chat.id, chat.title)}
                     onMouseEnter={(e) => {
-                      const parent = e.currentTarget.closest('.group');
-                      if (parent) {
-                        parent.classList.remove('hover:bg-[#D8EFE9]');
+                      const parent = e.currentTarget.closest(
+                        '.group'
+                      ) as HTMLElement;
+                      if (parent && currentRoomId !== chat.id) {
+                        parent.classList.remove(
+                          'bg-chat-hover',
+                          'dark:bg-dark-hover'
+                        );
                       }
                     }}
                     onMouseLeave={(e) => {
-                      const parent = e.currentTarget.closest('.group');
-                      if (parent) {
-                        parent.classList.add('hover:bg-[#D8EFE9]');
+                      const parent = e.currentTarget.closest(
+                        '.group'
+                      ) as HTMLElement;
+                      if (parent && currentRoomId !== chat.id) {
+                        parent.classList.add(
+                          'bg-chat-hover',
+                          'dark:bg-dark-hover'
+                        );
                       }
                     }}
                   >

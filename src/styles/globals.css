@@ -1,0 +1,63 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  /* 라이트모드 */
+  --color-chat-active: #d8efe9;
+  --color-chat-hover: #e8f5f1;
+  --color-bg-light: #f5f5f5;
+  --color-button-bg: #efefef;
+  --color-button-hover: #e8e8e8;
+  --color-button-hover-alt: #f9f9f9;
+  --color-search: #d9d9d9;
+  --color-search-icon: #575b65;
+  --color-placeholder: #a0a7bb;
+  --color-primary: #23c69e;
+  --color-primary-hover: #20b892;
+  --color-primary-accent: #10a37f;
+  --color-red-hover: #fed7d7;
+
+  /* 다크모드 */
+  --color-dark: #282a2e;
+  --color-dark-modal-hover: #323438;
+  --color-dark-active: #1e1f22;
+  --color-dark-hover: #202225;
+  --color-dark-bg: #3f424a;
+  --color-dark-user: #4b4f5b;
+  --color-dark-ai-bubble: #28303f;
+  --color-dark-ai-bubble-text: #eeeeee;
+  --color-dark-red: #3a1f1f;
+  --color-dark-red-hover: #3c2121;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}

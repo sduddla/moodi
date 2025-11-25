@@ -44,8 +44,8 @@ export default function ChatList({
           <div
             className={`max-w-[80%] rounded-lg px-4 py-3 text-sm ${
               msg.role === 'user'
-                ? 'bg-white text-black'
-                : 'bg-[#D8EFE9] text-black'
+                ? 'bg-white text-black dark:bg-dark-user dark:text-white'
+                : 'bg-chat-active text-black dark:bg-dark-ai-bubble dark:text-dark-ai-bubble-text'
             }`}
           >
             {highlightText(msg.text, searchQuery)}

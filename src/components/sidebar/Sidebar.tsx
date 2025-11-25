@@ -27,8 +27,8 @@ export default function Sidebar({
     <>
       <aside
         className={`${
-          isCollapsed ? 'w-[60px] border-r border-[#EAEAEA]' : 'w-[260px]'
-        } h-screen flex flex-col transition-all duration-200 relative z-50`}
+          isCollapsed ? 'w-[60px]' : 'w-[260px]'
+        } h-screen flex flex-col transition-all duration-200 relative z-50 dark:bg-dark`}
       >
         <div>
           {/* 사이드바 헤더 */}

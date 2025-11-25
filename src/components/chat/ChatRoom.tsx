@@ -95,7 +95,7 @@ export default function ChatRoom() {
           chatId={roomId}
         />
 
-        <div className='flex flex-1 flex-col bg-[#F5F5F5] rounded-l-lg min-h-0'>
+        <div className='flex flex-1 flex-col bg-bg-light dark:bg-dark-bg min-h-0'>
           <div
             ref={scrollRef}
             className='flex-1 overflow-y-auto px-6 py-4 min-h-0'
@@ -110,7 +110,7 @@ export default function ChatRoom() {
 
           <div className='shrink-0 px-6 pb-6 pt-2'>
             <div className='max-w-3xl mx-auto'>
-              <div className='bg-white rounded-lg shadow-[0_-4px_12px_rgba(0,0,0,0.06)] border border-gray-100 px-4'>
+              <div className='bg-white dark:bg-dark-user rounded-lg shadow-[0_-4px_12px_rgba(0,0,0,0.06)] px-4'>
                 <ChatInput onSend={handleSend} />
               </div>
             </div>
