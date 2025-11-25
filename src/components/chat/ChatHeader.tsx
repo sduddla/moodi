@@ -1,4 +1,4 @@
-import { Bookmark, Search, Trash } from 'lucide-react';
+import { Search, Trash } from 'lucide-react';
 import { Rock_Salt } from 'next/font/google';
 import { useState } from 'react';
 import ChatSearchModal from './ChatSearchModal';
@@ -50,12 +50,6 @@ export default function ChatHeader({
             <Search size={16} className='text-[#1E1F22]' />
           </button>
 
-          <button
-            type='button'
-            className='flex items-center justify-center w-9 h-9 rounded-lg bg-[#EFEFEF] hover:bg-[#E8E8E8] cursor-pointer transition-colors'
-          >
-            <Bookmark size={16} className='text-[#1E1F22]' />
-          </button>
           <button
             type='button'
             onClick={handleDeleteClick}
