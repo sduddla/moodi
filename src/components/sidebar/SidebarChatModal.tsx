@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useChatStore } from '@/stores/useChatStore';
 import { Pencil, Trash } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface SidebarChatModalProps {
   chatId: string;
@@ -77,6 +78,7 @@ export default function SidebarChatModal({
     deleteChatRoom(chatId);
     resetParentBackground();
     onClose();
+    toast.success('대화를 삭제했어요.');
   };
 
   const handleMouseEnter = () => {

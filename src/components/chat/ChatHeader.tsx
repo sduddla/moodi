@@ -3,6 +3,7 @@ import { Rock_Salt } from 'next/font/google';
 import { useState } from 'react';
 import ChatSearchModal from './ChatSearchModal';
 import { useChatStore } from '@/stores/useChatStore';
+import toast from 'react-hot-toast';
 
 const rockSalt = Rock_Salt({
   weight: '400',
@@ -25,6 +26,7 @@ export default function ChatHeader({
 
   const handleDeleteClick = () => {
     deleteChatRoom(chatId);
+    toast.success('대화를 삭제했어요.');
   };
 
   const handleSearchClick = () => {
