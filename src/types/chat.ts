@@ -1,6 +1,6 @@
 export interface Message {
   id: string;
-  role: 'user' | 'moodi';
+  role: 'user' | 'assistant';
   text: string;
 }
 

@@ -18,7 +18,7 @@ export default function IntroPage() {
       <div className='min-h-screen flex flex-col items-center justify-center gap-10'>
         <h1 className='flex flex-col items-center justify-center text-center'>
           <TypingText
-            text={`안녕, 나는 Moodi야.\n누구보다 네 마음에 공감해줄게.`}
+            text={`안녕, 나는 Moodi야.\n어떤 이야기든 다 공감해줄게.`}
             logo='Moodi'
             speed={80}
             done={() => setShowButton(true)}

@@ -3,7 +3,8 @@ import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: 'Moodi',
-  description: '누구보다 네 마음에 공감해주는 AI 챗봇 Moodi와 이야기해보세요.',
+  description:
+    '무조건 공감해주는 AI 챗봇 Moodi와 이야기해보세요. 어떤 이야기든 재치있고 유쾌하게 공감해드립니다.',
   icons: {
     icon: [
       { url: '/logo.svg', media: '(prefers-color-scheme: light)' },

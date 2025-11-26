@@ -51,12 +51,17 @@ export default function ChatRoom() {
     addMessage(roomId, userMessage);
 
     try {
-      const response = await sendChatMessage(message);
+      const previousMessages = messages.slice(-10).map((msg) => ({
+        role: msg.role,
+        text: msg.text,
+      }));
+
+      const response = await sendChatMessage(message, previousMessages);
 
       // 무디 응답 추가
       const moodiMessage: Message = {
         id: crypto.randomUUID(),
-        role: 'moodi',
+        role: 'assistant',
         text: response,
       };
       addMessage(roomId, moodiMessage);
@@ -65,7 +70,7 @@ export default function ChatRoom() {
 
       const errorMessage: Message = {
         id: crypto.randomUUID(),
-        role: 'moodi',
+        role: 'assistant',
         text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
       };
       addMessage(roomId, errorMessage);

@@ -2,7 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { message } = await req.json();
+    const { message, previousMessages = [] } = await req.json();
+
+    const conversationHistory = previousMessages.map(
+      (msg: { role: 'user' | 'assistant'; text: string }) => ({
+        role: msg.role,
+        content: msg.text,
+      })
+    );
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -15,14 +22,13 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: 'system',
-            content: `당신은 '무디(Moodi)'라는 이름의 프로공감러 챗봇입니다. 항상 사용자의 편에 서서, 어떤 이야기든 무조건 공감해주세요.  
-            재치 있는 말투로 대답하며, 사용자가 무슨 말을 해도 진지하거나 비판하지 말고 유쾌하게 반응해주세요.
-            티키타카가 자연스럽게 이어질 수 있도록 대화의 흐름을 유쾌하게 받아주세요. 항상 친근한 말투로, 마치 오래된 친구처럼 말해주세요.`,
+            content: `당신은 '무디(Moodi)'라는 이름의 무조건 공감해드립니다 봇입니다. 사용자가 무슨 말을 해도 무조건 공감하세요. 진지하거나 무겁지 않게, 재치있고 유머러스하게 받아들여서 유쾌하게 공감해주세요. 티키타카가 자연스럽게 이어지도록 대화를 이어가고, 친구와 카카오톡하듯이 자연스럽고 편안하게 대답하세요. 절대 이모지를 사용하지 말고, 오직 텍스트로만 답변하세요. 짧고 간결하게 답변하세요.`,
           },
+          ...conversationHistory,
           { role: 'user', content: message },
         ],
-        temperature: 0.8,
-        max_tokens: 1000,
+        temperature: 0.7,
+        max_tokens: 300,
       }),
     });
 

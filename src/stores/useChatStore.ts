@@ -33,7 +33,7 @@ export const useChatStore = create<ChatStore>()(
 
         const defaultGreeting: Message = {
           id: crypto.randomUUID(),
-          role: 'moodi',
+          role: 'assistant',
           text: randomGreeting,
         };
 
@@ -84,7 +84,7 @@ export const useChatStore = create<ChatStore>()(
           if (
             message.role === 'user' &&
             currentMessages.length === 1 &&
-            currentMessages[0].role === 'moodi'
+            currentMessages[0].role === 'assistant'
           ) {
             const title =
               message.text.length > 14

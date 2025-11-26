@@ -1,12 +1,13 @@
 export default async function sendChatMessage(
-  message: string
+  message: string,
+  previousMessages: Array<{ role: 'user' | 'assistant'; text: string }>
 ): Promise<string> {
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, previousMessages }),
   });
 
   if (!response.ok) {
