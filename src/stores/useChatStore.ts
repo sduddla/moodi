@@ -86,11 +86,6 @@ export const useChatStore = create<ChatStore>()(
             currentMessages.length === 1 &&
             currentMessages[0].role === 'assistant'
           ) {
-            const title =
-              message.text.length > 14
-                ? message.text.slice(0, 14) + '...'
-                : message.text;
-
             return {
               chats: {
                 ...state.chats,
@@ -99,7 +94,7 @@ export const useChatStore = create<ChatStore>()(
               chatList: [
                 {
                   id: chatId,
-                  title,
+                  title: '새로운 대화',
                 },
                 ...state.chatList,
               ],
