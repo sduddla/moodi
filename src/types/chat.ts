@@ -2,6 +2,7 @@ export interface Message {
   id: string;
   role: 'user' | 'assistant';
   text: string;
+  timestamp: number;
 }
 
 export interface ChatSummary {

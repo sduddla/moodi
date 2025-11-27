@@ -35,6 +35,7 @@ export const useChatStore = create<ChatStore>()(
           id: crypto.randomUUID(),
           role: 'assistant',
           text: randomGreeting,
+          timestamp: Date.now(),
         };
 
         set({

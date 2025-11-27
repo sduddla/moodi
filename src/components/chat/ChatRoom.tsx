@@ -115,6 +115,7 @@ export default function ChatRoom() {
       id: crypto.randomUUID(),
       role: 'user',
       text: message,
+      timestamp: Date.now(),
     };
     addMessage(roomId, userMessage);
     setIsLoading(true);
@@ -132,6 +133,7 @@ export default function ChatRoom() {
         id: crypto.randomUUID(),
         role: 'assistant',
         text: response,
+        timestamp: Date.now(),
       };
       addMessage(roomId, moodiMessage);
     } catch (error) {
@@ -141,6 +143,7 @@ export default function ChatRoom() {
         id: crypto.randomUUID(),
         role: 'assistant',
         text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
+        timestamp: Date.now(),
       };
       addMessage(roomId, errorMessage);
     } finally {

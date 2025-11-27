@@ -2,6 +2,7 @@
 
 import { Message } from '@/types/chat';
 import { useEffect } from 'react';
+import { formatTime } from '@/utils/formatTime';
 
 interface ChatListProps {
   messages: Message[];
@@ -61,10 +62,15 @@ export default function ChatList({
         <div
           key={msg.id}
           data-message-id={msg.id}
-          className={`flex ${
+          className={`flex items-end gap-2 ${
             msg.role === 'user' ? 'justify-end' : 'justify-start'
           }`}
         >
+          {msg.role === 'user' && msg.timestamp && (
+            <span className='text-xs opacity-60 mb-1'>
+              {formatTime(msg.timestamp)}
+            </span>
+          )}
           <div
             className={`max-w-[80%] rounded-lg px-4 py-3 text-sm ${
               msg.role === 'user'
@@ -74,6 +80,11 @@ export default function ChatList({
           >
             {highlightText(msg.text, searchQuery)}
           </div>
+          {msg.role === 'assistant' && msg.timestamp && (
+            <span className='text-xs opacity-60 mb-1'>
+              {formatTime(msg.timestamp)}
+            </span>
+          )}
         </div>
       ))}
       {isLoading && (
