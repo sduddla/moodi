@@ -147,7 +147,7 @@ export default function SidebarChatList({
                 }
               }}
             >
-              <div>
+              <div className='flex-1 min-w-0'>
                 {editingId === chat.id ? (
                   <input
                     type='text'
@@ -167,21 +167,21 @@ export default function SidebarChatList({
                     className='w-full text-sm font-medium focus:outline-none focus:ring-0'
                   />
                 ) : (
-                  <p className='text-sm font-medium'>{chat.title}</p>
+                  <p className='text-sm font-medium truncate'>{chat.title}</p>
                 )}
               </div>
               <div className='relative'>
-                <div
-                  className='w-6 h-6 flex items-center justify-center'
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <div className='w-6 h-6 flex items-center justify-center'>
                   <button
                     className={`transition-opacity p-1 rounded cursor-pointer ${
                       openModalId === chat.id
                         ? 'opacity-100'
                         : 'opacity-0 group-hover:opacity-100'
                     }`}
-                    onClick={(e) => handleEllipsisClick(e, chat.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEllipsisClick(e, chat.id);
+                    }}
                     onMouseEnter={(e) => {
                       const parent = e.currentTarget.closest(
                         '.group'

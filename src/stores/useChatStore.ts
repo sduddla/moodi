@@ -66,11 +66,9 @@ export const useChatStore = create<ChatStore>()(
       },
 
       updateRoomTitle: (chatId, newTitle) => {
-        const title =
-          newTitle.length > 14 ? newTitle.slice(0, 14) + '...' : newTitle;
         set((state) => ({
           chatList: state.chatList.map((chat) =>
-            chat.id === chatId ? { ...chat, title } : chat
+            chat.id === chatId ? { ...chat, title: newTitle } : chat
           ),
         }));
       },
@@ -80,7 +78,6 @@ export const useChatStore = create<ChatStore>()(
           const currentMessages = state.chats[chatId] || [];
           const newMessages = [...currentMessages, message];
 
-          // 사용자 첫 메시지, 타이틀 설정
           if (
             message.role === 'user' &&
             currentMessages.length === 1 &&
