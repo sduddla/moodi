@@ -23,7 +23,31 @@ export default function RootLayout({
     <html lang='ko'>
       <body>
         {children}
-        <Toaster position='top-center' />
+        <Toaster
+          position='top-center'
+          toastOptions={{
+            className: '',
+            duration: 2000,
+            style: {
+              background: 'var(--toast-bg)',
+              color: 'var(--toast-text)',
+            },
+            success: {
+              duration: 2000,
+              iconTheme: {
+                primary: 'var(--color-primary)',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 1000,
+              iconTheme: {
+                primary: 'var(--color-red)',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </body>
     </html>
   );

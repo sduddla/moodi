@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --toast-bg: #ffffff;
+  --toast-text: #171717;
 }
 
 @theme inline {
@@ -19,6 +21,7 @@
   --color-primary: #23c69e;
   --color-primary-hover: #20b892;
   --color-primary-accent: #10a37f;
+  --color-red: #ef4444;
   --color-red-hover: #fed7d7;
 
   /* 다크모드 */
@@ -36,8 +39,10 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #1e1f22;
     --foreground: #ededed;
+    --toast-bg: #282a2e;
+    --toast-text: #ededed;
   }
 }
 
@@ -58,6 +63,28 @@ body {
   }
 }
 
+@keyframes shake {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.7s ease-in-out;
 }
