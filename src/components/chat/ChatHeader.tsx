@@ -51,11 +51,17 @@ export default function ChatHeader({
     setIsInputOpen(false);
   };
 
+  const handleLogoClick = () => {
+    if (window.innerWidth < 768) {
+      router.push('/');
+    }
+  };
+
   return (
     <div className='relative'>
       <div className='px-4 py-2 flex items-center justify-between bg-white dark:bg-dark'>
         <div className='flex items-center gap-4'>
-          {/* 햄버거 버튼 */}
+          {/* 모바일 햄버거 버튼 */}
           {onToggleSidebar && (
             <button
               type='button'
@@ -65,9 +71,9 @@ export default function ChatHeader({
               <Menu size={16} className='text-dark-active dark:text-search' />
             </button>
           )}
-          <button onClick={() => router.push('/')} className='cursor-pointer'>
+          <button onClick={handleLogoClick}>
             <p
-              className={`${rockSalt.className} font-semibold cursor-default text-black dark:text-white`}
+              className={`${rockSalt.className} font-semibold text-black dark:text-white cursor-pointer md:cursor-default `}
             >
               Moodi
             </p>
