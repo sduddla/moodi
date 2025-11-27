@@ -2,7 +2,7 @@
 
 import { useChatStore } from '@/stores/useChatStore';
 import { Ellipsis } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 
@@ -13,15 +13,19 @@ interface SidebarChatListProps {
     onTitleRename: () => void;
     buttonElement: HTMLButtonElement;
   }) => void;
+  onCloseModal?: () => void;
   openModalId?: string | null;
   currentRoomId: string;
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function SidebarChatList({
   searchQuery,
   onOpenModal,
+  onCloseModal,
   openModalId,
   currentRoomId,
+  scrollRef,
 }: SidebarChatListProps) {
   const { chatList, updateRoomTitle } = useChatStore();
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -29,6 +33,18 @@ export default function SidebarChatList({
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const debouncedSearchQuery = useDebounce({ value: searchQuery, delay: 300 });
+  const SCROLL_POSITION_KEY = 'sidebar-scroll-position';
+
+  const handleEllipsisClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    chatId: string
+  ) => {
+    if (openModalId === chatId && onCloseModal) {
+      onCloseModal();
+    } else if (onOpenModal) {
+      handleOpenModal(e, chatId);
+    }
+  };
 
   const filteredChatList = !debouncedSearchQuery.trim()
     ? chatList
@@ -39,6 +55,10 @@ export default function SidebarChatList({
       );
 
   const handleChatClick = (chatId: string) => {
+    if (scrollRef?.current) {
+      const scrollTop = scrollRef.current.scrollTop;
+      sessionStorage.setItem(SCROLL_POSITION_KEY, scrollTop.toString());
+    }
     router.push(`/chat/${chatId}`);
   };
 
@@ -57,13 +77,13 @@ export default function SidebarChatList({
 
   const handleOpenModal = (
     e: React.MouseEvent<HTMLButtonElement>,
-    chatId: string,
-    chatTitle: string
+    chatId: string
   ) => {
-    if (onOpenModal) {
+    const chat = chatList.find((c) => c.id === chatId);
+    if (onOpenModal && chat) {
       onOpenModal({
         chatId,
-        onTitleRename: () => handleEditTitle(chatId, chatTitle),
+        onTitleRename: () => handleEditTitle(chatId, chat.title),
         buttonElement: e.currentTarget,
       });
     }
@@ -75,6 +95,21 @@ export default function SidebarChatList({
     }
   }, [editingId]);
 
+  const restoreScrollPosition = useCallback(() => {
+    if (!scrollRef?.current) return;
+
+    const savedScrollTop = sessionStorage.getItem(SCROLL_POSITION_KEY);
+    if (!savedScrollTop) return;
+
+    const scrollPosition = parseInt(savedScrollTop, 10);
+    scrollRef.current.scrollTop = scrollPosition;
+    sessionStorage.removeItem(SCROLL_POSITION_KEY);
+  }, [scrollRef]);
+
+  useEffect(() => {
+    restoreScrollPosition();
+  }, [currentRoomId, restoreScrollPosition]);
+
   return (
     <div>
       {debouncedSearchQuery.trim() && filteredChatList.length === 0 ? (
@@ -84,6 +119,7 @@ export default function SidebarChatList({
           {filteredChatList.map((chat) => (
             <div
               key={chat.id}
+              data-chat-id={chat.id}
               className={`group flex items-center text-black dark:text-white justify-between p-2 rounded-lg cursor-pointer transition-colors ${
                 editingId === chat.id || currentRoomId === chat.id
                   ? 'bg-chat-active dark:bg-dark-active'
@@ -145,7 +181,7 @@ export default function SidebarChatList({
                         ? 'opacity-100'
                         : 'opacity-0 group-hover:opacity-100'
                     }`}
-                    onClick={(e) => handleOpenModal(e, chat.id, chat.title)}
+                    onClick={(e) => handleEllipsisClick(e, chat.id)}
                     onMouseEnter={(e) => {
                       const parent = e.currentTarget.closest(
                         '.group'

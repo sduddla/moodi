@@ -22,19 +22,39 @@ export default function SidebarChatModal({
 }: SidebarChatModalProps) {
   const { deleteChatRoom } = useChatStore();
   const modalRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+  }>({ left: 0 });
 
   useEffect(() => {
     const updatePosition = () => {
-      if (buttonElement) {
-        const currentPosition = buttonElement.getBoundingClientRect();
-        setPosition({
-          top: currentPosition.bottom + 8,
-          left: currentPosition.left,
-        });
+      if (buttonElement && modalRef.current) {
+        const buttonRect = buttonElement.getBoundingClientRect();
+        const modalHeight = modalRef.current.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const spaceBottom = windowHeight - buttonRect.bottom;
+        const spaceTop = buttonRect.top;
+
+        // 아래 공간 부족, 윗 공간 더 많은 경우
+        if (spaceBottom < modalHeight && spaceTop > spaceBottom) {
+          setPosition({
+            bottom: windowHeight - buttonRect.top + 8,
+            left: buttonRect.left,
+          });
+        } else {
+          setPosition({
+            top: buttonRect.bottom + 8,
+            left: buttonRect.left,
+          });
+        }
       }
     };
     updatePosition();
+
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
   }, [buttonElement]);
 
   const getParentElement = useCallback(() => {
@@ -96,7 +116,13 @@ export default function SidebarChatModal({
     <div
       ref={modalRef}
       className='fixed bg-white dark:bg-dark rounded-lg border border-gray-200 dark:border-black/10 shadow-xl z-60 py-2 px-2 min-w-[140px]'
-      style={{ top: `${position.top}px`, left: `${position.left}px` }}
+      style={{
+        ...(position.top !== undefined && { top: `${position.top}px` }),
+        ...(position.bottom !== undefined && {
+          bottom: `${position.bottom}px`,
+        }),
+        left: `${position.left}px`,
+      }}
       onMouseEnter={handleMouseEnter}
     >
       <button

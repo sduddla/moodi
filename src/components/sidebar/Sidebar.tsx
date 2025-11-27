@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import SidebarChatList from './SidebarChatList';
 import SidebarHeader from './SidebarHeader';
 import { useSidebarStore } from '@/stores/useSidebarStore';
@@ -12,16 +12,19 @@ interface SidebarProps {
     onTitleRename: () => void;
     buttonElement: HTMLButtonElement;
   }) => void;
+  onCloseModal?: () => void;
   currentRoomId: string;
 }
 
 export default function Sidebar({
   onOpenModal,
+  onCloseModal,
   openModalId,
   currentRoomId,
 }: SidebarProps) {
   const { isCollapsed, toggle } = useSidebarStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -42,14 +45,21 @@ export default function Sidebar({
 
         {/* 최근 메시지 리스트 */}
         {!isCollapsed && (
-          <div className='flex-1 overflow-y-auto p-4 mt-6'>
+          <div className='flex-1 flex flex-col p-4 mt-6 min-h-0'>
             <p className='text-sm text-[#6D717C] mb-2'>최근 채팅</p>
-            <SidebarChatList
-              searchQuery={searchQuery}
-              onOpenModal={onOpenModal}
-              openModalId={openModalId}
-              currentRoomId={currentRoomId}
-            />
+            <div
+              ref={scrollRef}
+              className='flex-1 overflow-y-auto scrollbar-hide'
+            >
+              <SidebarChatList
+                searchQuery={searchQuery}
+                onOpenModal={onOpenModal}
+                onCloseModal={onCloseModal}
+                openModalId={openModalId}
+                currentRoomId={currentRoomId}
+                scrollRef={scrollRef}
+              />
+            </div>
           </div>
         )}
       </aside>
