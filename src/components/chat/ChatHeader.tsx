@@ -14,12 +14,22 @@ interface ChatHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   chatId: string;
+  highlightMessagesIds?: string[];
+  currentHighlightIndexRef?: React.RefObject<number>;
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
+  onCurrentHighlightChange?: (messageId: string | null) => void;
+  onSearchEnter?: () => void;
 }
 
 export default function ChatHeader({
   searchQuery,
   onSearchChange,
   chatId,
+  highlightMessagesIds,
+  currentHighlightIndexRef,
+  scrollRef,
+  onCurrentHighlightChange,
+  onSearchEnter,
 }: ChatHeaderProps) {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const { deleteChatRoom } = useChatStore();
@@ -69,6 +79,11 @@ export default function ChatHeader({
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}
             onClose={handleSearchClose}
+            highlightMessagesIds={highlightMessagesIds}
+            currentHighlightIndexRef={currentHighlightIndexRef}
+            scrollRef={scrollRef}
+            onCurrentHighlightChange={onCurrentHighlightChange}
+            onSearchEnter={onSearchEnter}
           />
         </>
       )}

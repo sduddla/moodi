@@ -9,8 +9,8 @@ import ChatList from './ChatList';
 import sendChatMessage from '@/hooks/sendChatMessage';
 import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
-import useDebounce from '@/hooks/useDebounce';
 import SidebarChatModal from '../sidebar/SidebarChatModal';
+import toast from 'react-hot-toast';
 
 interface ModalState {
   chatId: string;
@@ -24,9 +24,18 @@ export default function ChatRoom() {
   const { addMessage, createChatRoom, chats } = useChatStore();
   const messages = chats[roomId] || [];
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearchQuery = useDebounce({ value: searchQuery, delay: 300 });
+  const [activeSearchQuery, setActiveSearchQuery] = useState('');
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [highlightMessagesIds, setHighlightMessagesIds] = useState<string[]>(
+    []
+  );
+  const currentHightlightIndexRef = useRef(0);
+  const [currentHighlightMessageId, setCurrentHighlightMessageId] = useState<
+    string | null
+  >(null);
+  const hasShownToast = useRef(false);
+  const checkEnter = useRef(false);
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -36,10 +45,68 @@ export default function ChatRoom() {
 
   // 새로운 메시지 있을 경우 자동으로 맨 아래로 스크롤
   useEffect(() => {
-    if (scrollRef.current && messages.length > 0) {
+    if (scrollRef.current && messages.length > 0 && !searchQuery.trim()) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages.length]);
+  }, [messages.length, searchQuery]);
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setActiveSearchQuery('');
+    }
+  };
+
+  // 검색어 변경될 때 하이라이트 메시지 계산
+  const targetHighlightMessageId = activeSearchQuery.trim()
+    ? highlightMessagesIds.length > 0
+      ? highlightMessagesIds[highlightMessagesIds.length - 1]
+      : null
+    : null;
+
+  useEffect(() => {
+    hasShownToast.current = false;
+    checkEnter.current = false;
+  }, [activeSearchQuery]);
+
+  useEffect(() => {
+    if (activeSearchQuery.trim()) {
+      if (highlightMessagesIds.length === 0) {
+        if (checkEnter.current && !hasShownToast.current) {
+          toast.error('검색 결과가 없습니다.');
+          hasShownToast.current = true;
+          checkEnter.current = false;
+        }
+      } else {
+        hasShownToast.current = false;
+
+        if (scrollRef.current) {
+          const lastIndex = highlightMessagesIds.length - 1;
+          currentHightlightIndexRef.current = lastIndex;
+
+          const messageId = highlightMessagesIds[lastIndex];
+
+          const messageElement = scrollRef.current.querySelector(
+            `[data-message-id="${messageId}"]`
+          ) as HTMLElement;
+
+          if (messageElement) {
+            messageElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+          }
+        }
+      }
+    } else {
+      hasShownToast.current = false;
+    }
+  }, [activeSearchQuery, highlightMessagesIds]);
+
+  // 하이라이트 메시지 업데이트
+  useEffect(() => {
+    setCurrentHighlightMessageId(targetHighlightMessageId);
+  }, [targetHighlightMessageId]);
 
   const handleSend = async (message: string) => {
     // 사용자 메시지 추가
@@ -96,8 +163,17 @@ export default function ChatRoom() {
       <div className='flex flex-1 flex-col relative z-0'>
         <ChatHeader
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={handleSearchChange}
           chatId={roomId}
+          highlightMessagesIds={highlightMessagesIds}
+          currentHighlightIndexRef={currentHightlightIndexRef}
+          scrollRef={scrollRef}
+          onCurrentHighlightChange={setCurrentHighlightMessageId}
+          onSearchEnter={() => {
+            setActiveSearchQuery(searchQuery);
+            checkEnter.current = true;
+            hasShownToast.current = false;
+          }}
         />
 
         <div className='flex flex-1 flex-col bg-bg-light dark:bg-dark-bg min-h-0'>
@@ -108,7 +184,9 @@ export default function ChatRoom() {
             <div className='max-w-3xl mx-auto mt-6'>
               <ChatList
                 messages={messages}
-                searchQuery={debouncedSearchQuery}
+                searchQuery={activeSearchQuery}
+                onHighlightedMessagesChange={setHighlightMessagesIds}
+                currentHighlightMessageId={currentHighlightMessageId}
               />
             </div>
           </div>

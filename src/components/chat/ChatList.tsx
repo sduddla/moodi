@@ -1,15 +1,20 @@
 'use client';
 
 import { Message } from '@/types/chat';
+import { useEffect } from 'react';
 
 interface ChatListProps {
   messages: Message[];
   searchQuery?: string;
+  onHighlightedMessagesChange?: (messageIds: string[]) => void;
+  currentHighlightMessageId?: string | null;
 }
 
 export default function ChatList({
   messages,
   searchQuery = '',
+  onHighlightedMessagesChange,
+  currentHighlightMessageId,
 }: ChatListProps) {
   const highlightText = (text: string, query: string) => {
     if (!query.trim()) {
@@ -32,11 +37,28 @@ export default function ChatList({
     });
   };
 
+  useEffect(() => {
+    if (onHighlightedMessagesChange) {
+      if (!searchQuery.trim()) {
+        onHighlightedMessagesChange([]);
+        return;
+      }
+
+      const query = searchQuery.toLowerCase();
+      const highlightedMessageIds = messages
+        .filter((msg) => msg.text.toLowerCase().includes(query))
+        .map((msg) => msg.id);
+
+      onHighlightedMessagesChange(highlightedMessageIds);
+    }
+  }, [messages, onHighlightedMessagesChange, searchQuery]);
+
   return (
     <div className='flex flex-col gap-4'>
       {messages.map((msg) => (
         <div
           key={msg.id}
+          data-message-id={msg.id}
           className={`flex ${
             msg.role === 'user' ? 'justify-end' : 'justify-start'
           }`}
@@ -46,7 +68,7 @@ export default function ChatList({
               msg.role === 'user'
                 ? 'bg-white text-black dark:bg-dark-user dark:text-white'
                 : 'bg-chat-active text-black dark:bg-dark-ai-bubble dark:text-dark-ai-bubble-text'
-            }`}
+            } ${currentHighlightMessageId === msg.id ? 'animate-shake' : ''}`}
           >
             {highlightText(msg.text, searchQuery)}
           </div>
