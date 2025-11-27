@@ -84,7 +84,7 @@ export default function SidebarChatList({
           {filteredChatList.map((chat) => (
             <div
               key={chat.id}
-              className={`group flex items-center text-black dark:text-white justify-between p-2 pl-0 rounded-lg cursor-pointer transition-colors ${
+              className={`group flex items-center text-black dark:text-white justify-between p-2 rounded-lg cursor-pointer transition-colors ${
                 editingId === chat.id || currentRoomId === chat.id
                   ? 'bg-chat-active dark:bg-dark-active'
                   : ''
