@@ -1,9 +1,10 @@
-import { Search, Trash } from 'lucide-react';
+import { Menu, Search, Trash } from 'lucide-react';
 import { Rock_Salt } from 'next/font/google';
 import { useState } from 'react';
 import ChatSearchModal from './ChatSearchModal';
 import { useChatStore } from '@/stores/useChatStore';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const rockSalt = Rock_Salt({
   weight: '400',
@@ -19,6 +20,7 @@ interface ChatHeaderProps {
   scrollRef?: React.RefObject<HTMLDivElement | null>;
   onCurrentHighlightChange?: (messageId: string | null) => void;
   onSearchEnter?: () => void;
+  onToggleSidebar?: () => void;
 }
 
 export default function ChatHeader({
@@ -30,9 +32,11 @@ export default function ChatHeader({
   scrollRef,
   onCurrentHighlightChange,
   onSearchEnter,
+  onToggleSidebar,
 }: ChatHeaderProps) {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const { deleteChatRoom } = useChatStore();
+  const router = useRouter();
 
   const handleDeleteClick = () => {
     deleteChatRoom(chatId);
@@ -49,12 +53,26 @@ export default function ChatHeader({
 
   return (
     <div className='relative'>
-      <div className='px-6 py-2 flex items-center justify-between bg-white dark:bg-dark'>
-        <p
-          className={`${rockSalt.className} font-semibold cursor-default text-black dark:text-white`}
-        >
-          Moodi
-        </p>
+      <div className='px-4 py-2 flex items-center justify-between bg-white dark:bg-dark'>
+        <div className='flex items-center gap-4'>
+          {/* 햄버거 버튼 */}
+          {onToggleSidebar && (
+            <button
+              type='button'
+              onClick={onToggleSidebar}
+              className='md:hidden flex items-center justify-center w-9 h-9 hover:bg-button-hover rounded-lg dark:hover:bg-dark-hover cursor-pointer transition-colors'
+            >
+              <Menu size={16} className='text-dark-active dark:text-search' />
+            </button>
+          )}
+          <button onClick={() => router.push('/')} className='cursor-pointer'>
+            <p
+              className={`${rockSalt.className} font-semibold cursor-default text-black dark:text-white`}
+            >
+              Moodi
+            </p>
+          </button>
+        </div>
         <div className='flex gap-4'>
           <button
             type='button'

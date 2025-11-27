@@ -37,6 +37,7 @@ export default function ChatRoom() {
   const hasShownToast = useRef(false);
   const checkEnter = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -152,12 +153,20 @@ export default function ChatRoom() {
   };
 
   return (
-    <div className='flex h-screen bg-white relative'>
+    <div className='flex h-screen bg-white dark:bg-dark-active relative'>
+      {isMobileSidebarOpen && (
+        <div
+          className='fixed inset-0 bg-black/50 z-40 md:hidden'
+          onClick={() => setIsMobileSidebarOpen(false)}
+        />
+      )}
       <Sidebar
         openModalId={modalState?.chatId || null}
         onOpenModal={setModalState}
         onCloseModal={() => setModalState(null)}
         currentRoomId={roomId}
+        isMobileOpen={isMobileSidebarOpen}
+        onMobileClose={() => setIsMobileSidebarOpen(false)}
       />
       {modalState && (
         <SidebarChatModal
@@ -182,6 +191,7 @@ export default function ChatRoom() {
             checkEnter.current = true;
             hasShownToast.current = false;
           }}
+          onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         />
 
         <div className='flex flex-1 flex-col bg-bg-light dark:bg-dark-bg min-h-0'>

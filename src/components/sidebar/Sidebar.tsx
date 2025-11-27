@@ -14,6 +14,8 @@ interface SidebarProps {
   }) => void;
   onCloseModal?: () => void;
   currentRoomId: string;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 export default function Sidebar({
@@ -21,30 +23,45 @@ export default function Sidebar({
   onCloseModal,
   openModalId,
   currentRoomId,
+  isMobileOpen = false,
+  onMobileClose,
 }: SidebarProps) {
   const { isCollapsed, toggle } = useSidebarStore();
   const [searchQuery, setSearchQuery] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const showFullSidebar = isMobileOpen ? false : isCollapsed;
+
   return (
     <>
       <aside
         className={`${
-          isCollapsed ? 'w-[60px]' : 'w-[260px]'
-        } h-screen flex flex-col transition-all duration-200 relative z-50 dark:bg-dark`}
+          showFullSidebar ? 'w-[60px]' : 'w-[260px]'
+        } h-screen flex flex-col z-50 bg-white dark:bg-dark
+        fixed top-0 left-0 transform transition-transform duration-300 ease-out
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:relative md:translate-x-0 md:transition-all md:duration-300 md:ease-out
+        `}
+        onClick={(e) => e.stopPropagation()}
       >
         <div>
           {/* 사이드바 헤더 */}
           <SidebarHeader
-            isCollapsed={isCollapsed}
-            onToggle={toggle}
+            isCollapsed={showFullSidebar}
+            onToggle={() => {
+              if (isMobileOpen && onMobileClose) {
+                onMobileClose();
+              } else {
+                toggle();
+              }
+            }}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
           />
         </div>
 
         {/* 최근 메시지 리스트 */}
-        {!isCollapsed && (
+        {!showFullSidebar && (
           <div className='flex-1 flex flex-col p-4 mt-6 min-h-0'>
             <p className='text-sm text-[#6D717C] mb-2'>최근 채팅</p>
             <div
