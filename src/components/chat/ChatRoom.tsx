@@ -36,6 +36,7 @@ export default function ChatRoom() {
   >(null);
   const hasShownToast = useRef(false);
   const checkEnter = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -116,6 +117,7 @@ export default function ChatRoom() {
       text: message,
     };
     addMessage(roomId, userMessage);
+    setIsLoading(true);
 
     try {
       const previousMessages = messages.slice(-10).map((msg) => ({
@@ -141,6 +143,8 @@ export default function ChatRoom() {
         text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
       };
       addMessage(roomId, errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -187,6 +191,7 @@ export default function ChatRoom() {
                 searchQuery={activeSearchQuery}
                 onHighlightedMessagesChange={setHighlightMessagesIds}
                 currentHighlightMessageId={currentHighlightMessageId}
+                isLoading={isLoading}
               />
             </div>
           </div>

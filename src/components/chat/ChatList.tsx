@@ -8,6 +8,7 @@ interface ChatListProps {
   searchQuery?: string;
   onHighlightedMessagesChange?: (messageIds: string[]) => void;
   currentHighlightMessageId?: string | null;
+  isLoading?: boolean;
 }
 
 export default function ChatList({
@@ -15,6 +16,7 @@ export default function ChatList({
   searchQuery = '',
   onHighlightedMessagesChange,
   currentHighlightMessageId,
+  isLoading = false,
 }: ChatListProps) {
   const highlightText = (text: string, query: string) => {
     if (!query.trim()) {
@@ -74,6 +76,17 @@ export default function ChatList({
           </div>
         </div>
       ))}
+      {isLoading && (
+        <div className='flex justify-start'>
+          <div className='max-w-[80%] rounded-lg px-4 py-3 text-sm bg-chat-active text-black dark:bg-dark-ai-bubble dark:text-dark-ai-bubble-text'>
+            <div className='flex gap-1 items-center'>
+              <span className='loading-dot w-1 h-1 rounded-full bg-current'></span>
+              <span className='loading-dot w-1 h-1 rounded-full bg-current'></span>
+              <span className='loading-dot w-1 h-1 rounded-full bg-current'></span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
