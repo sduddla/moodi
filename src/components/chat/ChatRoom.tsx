@@ -11,12 +11,7 @@ import { useChatStore } from '@/stores/useChatStore';
 import SidebarChatModal from '../sidebar/SidebarChatModal';
 import { createMessage } from '@/utils/createMessage';
 import { useSearchMessages } from '@/hooks/useSearchMessages';
-
-interface ModalState {
-  chatId: string;
-  onTitleRename: () => void;
-  buttonElement: HTMLButtonElement;
-}
+import { ModalState } from '@/types/modal';
 
 export default function ChatRoom() {
   const params = useParams();

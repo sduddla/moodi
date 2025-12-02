@@ -5,14 +5,11 @@ import { Ellipsis } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
+import { ModalState } from '@/types/modal';
 
 interface SidebarChatListProps {
   searchQuery: string;
-  onOpenModal?: (state: {
-    chatId: string;
-    onTitleRename: () => void;
-    buttonElement: HTMLButtonElement;
-  }) => void;
+  onOpenModal?: (state: ModalState) => void;
   onCloseModal?: () => void;
   openModalId?: string | null;
   currentRoomId: string;

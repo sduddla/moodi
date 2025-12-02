@@ -4,14 +4,11 @@ import { useRef, useState } from 'react';
 import SidebarChatList from './SidebarChatList';
 import SidebarHeader from './SidebarHeader';
 import { useSidebarStore } from '@/stores/useSidebarStore';
+import { ModalState } from '@/types/modal';
 
 interface SidebarProps {
   openModalId?: string | null;
-  onOpenModal?: (state: {
-    chatId: string;
-    onTitleRename: () => void;
-    buttonElement: HTMLButtonElement;
-  }) => void;
+  onOpenModal?: (state: ModalState) => void;
   onCloseModal?: () => void;
   currentRoomId: string;
   isMobileOpen?: boolean;
