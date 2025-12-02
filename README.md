@@ -2,7 +2,7 @@
 
 > "어떤 이야기든 다 공감해줄게."
 
-<img width="1440" height="800" alt="moodi" src="https://github.com/user-attachments/assets/15847567-39fc-41d7-af23-e59037e8ffde" />
+<img width="1440" height="800" alt="moodi" src="https://github.com/user-attachments/assets/944b4136-2ec6-4ed4-a987-1f1f555ba77f" />
 
 <br>
 <br>
@@ -22,6 +22,7 @@
 | 메인 화면 | 채팅 화면 |
 | --- | --- |
 | <img width="1511" height="855" alt="1" src="https://github.com/user-attachments/assets/3f6fdfa0-bf28-4fd7-a76e-577138df003b" /> | <img width="1511" height="855" alt="2" src="https://github.com/user-attachments/assets/ed7c9022-293c-414d-ae51-9bf7b6a8f1a1" /> |
+| <img width="1511" height="855" alt="1" src="https://github.com/user-attachments/assets/a566c1b5-9eaa-468c-9721-856cd4575f62" /> | <img width="1511" height="855" alt="2" src="https://github.com/user-attachments/assets/83bf0d13-5778-4002-962e-b376288ec685" /> |
 
 - **AI 챗봇 대화 기능**: GPT-4o 기반 공감형 대화
 - **채팅방 관리**: 생성, 삭제, 이름 수정
