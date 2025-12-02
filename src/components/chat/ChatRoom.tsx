@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Message } from '@/types/chat';
 import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
@@ -11,6 +10,7 @@ import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
 import SidebarChatModal from '../sidebar/SidebarChatModal';
 import toast from 'react-hot-toast';
+import { createMessage } from '@/utils/createMessage';
 
 interface ModalState {
   chatId: string;
@@ -112,12 +112,7 @@ export default function ChatRoom() {
 
   const handleSend = async (message: string) => {
     // 사용자 메시지 추가
-    const userMessage: Message = {
-      id: crypto.randomUUID(),
-      role: 'user',
-      text: message,
-      timestamp: Date.now(),
-    };
+    const userMessage = createMessage('user', message);
     addMessage(roomId, userMessage);
     setIsLoading(true);
 
@@ -130,22 +125,15 @@ export default function ChatRoom() {
       const response = await sendChatMessage(message, previousMessages);
 
       // 무디 응답 추가
-      const moodiMessage: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: response,
-        timestamp: Date.now(),
-      };
+      const moodiMessage = createMessage('assistant', response);
       addMessage(roomId, moodiMessage);
     } catch (error) {
       console.error('Error sending message:', error);
 
-      const errorMessage: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
-        timestamp: Date.now(),
-      };
+      const errorMessage = createMessage(
+        'assistant',
+        '메시지를 보내는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.'
+      );
       addMessage(roomId, errorMessage);
     } finally {
       setIsLoading(false);

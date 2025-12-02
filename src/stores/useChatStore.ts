@@ -1,6 +1,7 @@
-import { ChatStore, Message } from '@/types/chat';
+import { ChatStore } from '@/types/chat';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { createMessage } from '@/utils/createMessage';
 
 export const useChatStore = create<ChatStore>()(
   persist(
@@ -31,12 +32,7 @@ export const useChatStore = create<ChatStore>()(
         const randomGreeting =
           greetings[Math.floor(Math.random() * greetings.length)];
 
-        const defaultGreeting: Message = {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          text: randomGreeting,
-          timestamp: Date.now(),
-        };
+        const defaultGreeting = createMessage('assistant', randomGreeting);
 
         set({
           chats: {
