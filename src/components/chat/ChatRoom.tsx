@@ -9,8 +9,8 @@ import sendChatMessage from '@/hooks/sendChatMessage';
 import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
 import SidebarChatModal from '../sidebar/SidebarChatModal';
-import toast from 'react-hot-toast';
 import { createMessage } from '@/utils/createMessage';
+import { useSearchMessages } from '@/hooks/useSearchMessages';
 
 interface ModalState {
   chatId: string;
@@ -23,21 +23,22 @@ export default function ChatRoom() {
   const roomId = params.id as string;
   const { addMessage, createChatRoom, chats } = useChatStore();
   const messages = chats[roomId] || [];
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeSearchQuery, setActiveSearchQuery] = useState('');
   const [modalState, setModalState] = useState<ModalState | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [highlightMessagesIds, setHighlightMessagesIds] = useState<string[]>(
-    []
-  );
-  const currentHightlightIndexRef = useRef(0);
-  const [currentHighlightMessageId, setCurrentHighlightMessageId] = useState<
-    string | null
-  >(null);
-  const hasShownToast = useRef(false);
-  const checkEnter = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  const {
+    searchQuery,
+    activeSearchQuery,
+    highlightMessagesIds,
+    currentHighlightMessageId,
+    currentHighlightIndexRef,
+    handleSearchChange,
+    handleSearchEnter,
+    setHighlightMessagesIds,
+    setCurrentHighlightMessageId,
+  } = useSearchMessages({ scrollRef });
 
   useEffect(() => {
     if (roomId && !chats[roomId]) {
@@ -51,64 +52,6 @@ export default function ChatRoom() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages.length, searchQuery]);
-
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-    if (!query.trim()) {
-      setActiveSearchQuery('');
-    }
-  };
-
-  // 검색어 변경될 때 하이라이트 메시지 계산
-  const targetHighlightMessageId = activeSearchQuery.trim()
-    ? highlightMessagesIds.length > 0
-      ? highlightMessagesIds[highlightMessagesIds.length - 1]
-      : null
-    : null;
-
-  useEffect(() => {
-    hasShownToast.current = false;
-    checkEnter.current = false;
-  }, [activeSearchQuery]);
-
-  useEffect(() => {
-    if (activeSearchQuery.trim()) {
-      if (highlightMessagesIds.length === 0) {
-        if (checkEnter.current && !hasShownToast.current) {
-          toast.error('검색 결과가 없습니다.');
-          hasShownToast.current = true;
-          checkEnter.current = false;
-        }
-      } else {
-        hasShownToast.current = false;
-
-        if (scrollRef.current) {
-          const lastIndex = highlightMessagesIds.length - 1;
-          currentHightlightIndexRef.current = lastIndex;
-
-          const messageId = highlightMessagesIds[lastIndex];
-
-          const messageElement = scrollRef.current.querySelector(
-            `[data-message-id="${messageId}"]`
-          ) as HTMLElement;
-
-          if (messageElement) {
-            messageElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-            });
-          }
-        }
-      }
-    } else {
-      hasShownToast.current = false;
-    }
-  }, [activeSearchQuery, highlightMessagesIds]);
-
-  // 하이라이트 메시지 업데이트
-  useEffect(() => {
-    setCurrentHighlightMessageId(targetHighlightMessageId);
-  }, [targetHighlightMessageId]);
 
   const handleSend = async (message: string) => {
     // 사용자 메시지 추가
@@ -171,14 +114,10 @@ export default function ChatRoom() {
           onSearchChange={handleSearchChange}
           chatId={roomId}
           highlightMessagesIds={highlightMessagesIds}
-          currentHighlightIndexRef={currentHightlightIndexRef}
+          currentHighlightIndexRef={currentHighlightIndexRef}
           scrollRef={scrollRef}
           onCurrentHighlightChange={setCurrentHighlightMessageId}
-          onSearchEnter={() => {
-            setActiveSearchQuery(searchQuery);
-            checkEnter.current = true;
-            hasShownToast.current = false;
-          }}
+          onSearchEnter={handleSearchEnter}
           onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         />
 
