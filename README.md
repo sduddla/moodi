@@ -15,7 +15,6 @@
 진지하거나 무겁지 않게, 친구와 채팅하듯이 자연스럽고 편안한 대화를 제공합니다.
 
 <br>
-<br>
 
 ## 주요 기능
 
@@ -30,7 +29,6 @@
 - **다크/라이트 모드**: 시스템 설정 기반 모드
 
 <br>
-<br>
 
 ## 기술 스택
 
@@ -44,7 +42,6 @@
 | **UI Library**       | Tailwind CSS, react-hot-toast, lucide-react |
 | **Hosting**          | Vercel                        |
 
-<br>
 <br>
 
 ## 프로젝트 구조
