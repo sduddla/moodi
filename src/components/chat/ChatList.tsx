@@ -1,8 +1,9 @@
 'use client';
 
 import { Message } from '@/types/chat';
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { formatTime } from '@/utils/formatTime';
+import { formDateLabel, shouldShowDateDivider } from '@/utils/formatDate';
 
 interface ChatListProps {
   messages: Message[];
@@ -58,8 +59,18 @@ export default function ChatList({
 
   return (
     <div className='flex flex-col gap-4'>
-      {messages.map((msg) => (
-        <div
+      {messages.map((msg, index) => {
+        const showDivider = index === 0 || shouldShowDateDivider(msg.timestamp, messages[index - 1].timestamp);
+      return (
+        <Fragment key={msg.id}>
+          {showDivider && (
+            <div className='flex items-center gap-4 my-4'>
+              <div className='flex-1 bg-gray-300 dark:bg-gray-600 h-px'></div>
+                <span className='text-xs text-gray-500 dark:text-gray-400'>{formDateLabel(msg.timestamp)}</span>
+                <div className='flex-1 bg-gray-300 dark:bg-gray-600 h-px'></div>
+            </div>
+          )}
+          <div
           key={msg.id}
           data-message-id={msg.id}
           className={`flex items-end gap-2 ${
@@ -84,9 +95,11 @@ export default function ChatList({
             <span className='text-xs opacity-60 mb-1'>
               {formatTime(msg.timestamp)}
             </span>
-          )}
+        )}
         </div>
-      ))}
+        </Fragment>
+      );
+    })}
       {isLoading && (
         <div className='flex justify-start'>
           <div className='max-w-[80%] rounded-lg px-4 py-3 text-sm bg-chat-active text-black dark:bg-dark-ai-bubble dark:text-dark-ai-bubble-text'>

@@ -5,7 +5,7 @@ import Sidebar from '../sidebar/Sidebar';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
 import ChatList from './ChatList';
-import sendChatMessage from '@/hooks/sendChatMessage';
+import sendChatMessage from '@/utils/sendChatMessage';
 import { useParams } from 'next/navigation';
 import { useChatStore } from '@/stores/useChatStore';
 import SidebarChatModal from '../sidebar/SidebarChatModal';
