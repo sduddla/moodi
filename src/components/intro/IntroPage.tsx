@@ -28,10 +28,10 @@ export default function IntroPage() {
           {showButton && (
             <button
               onClick={handleClick}
-              className='w-full border border-chat-active rounded-xl text-sm px-4 py-2 cursor-pointer relative overflow-hidden drop-shadow-2xl group animate-fadeIn'
+              className='w-full border border-chat-active rounded-xl text-sm px-4 py-2 cursor-pointer relative overflow-hidden drop-shadow-2xl group animate-fadeIn transition-transform active:scale-[0.97] active:brightness-95 [-webkit-tap-highlight-color:transparent]'
             >
-              <span className='absolute w-0 inset-0 bg-primary-accent transition-all duration-800 ease-out group-hover:w-full '></span>
-              <span className='relative z-10 text-black group-hover:text-white transition-all dark:text-white'>
+              <span className='absolute inset-0 bg-primary-accent w-full md:w-0 transition-all duration-800 ease-out md:group-hover:w-full'></span>
+              <span className='relative z-10 text-white md:text-black md:group-hover:text-white dark:text-white transition-all'>
                 이야기하러 가기
               </span>
             </button>
