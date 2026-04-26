@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
 import { Toaster } from 'react-hot-toast';
 
@@ -12,6 +12,12 @@ export const metadata: Metadata = {
       { url: '/logo-white.svg', media: '(prefers-color-scheme: dark)' },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
