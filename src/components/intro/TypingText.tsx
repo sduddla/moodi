@@ -96,7 +96,7 @@ export default function TypingText({
   };
 
   return (
-    <p className='text-2xl font-bold'>
+    <p className='text-lg md:text-2xl font-bold'>
       {renderText()}
       {!isTypingComplete && <span className='animate-pulse'>|</span>}
     </p>
